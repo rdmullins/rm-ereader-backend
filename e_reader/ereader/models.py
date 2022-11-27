@@ -33,3 +33,12 @@ class Book(models.Model):
 
 class Book_Status(models.Model):
     status = models.CharField(max_length=255)
+
+class User_Book(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    book_status = models.ForeignKey(Book_Status, on_delete=models.PROTECT)
+    farthest_read = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    is_visible = models.BooleanField(default=True)
