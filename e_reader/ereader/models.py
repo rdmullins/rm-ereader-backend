@@ -8,3 +8,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class Author(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    dob = models.DateField(blank=True)
+    dod = models.DateField(blank=True)
