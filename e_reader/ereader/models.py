@@ -42,3 +42,7 @@ class User_Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     is_visible = models.BooleanField(default=True)
+
+class Collection(models.Model):
+    name = models.CharField(max_length=255)
+    is_public = models.BooleanField(default=False)
