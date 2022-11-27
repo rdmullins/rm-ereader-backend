@@ -59,3 +59,7 @@ class Author_Book(models.Model):
 class Subject_Book(models.Model):
     subject = models.ManyToManyField(Subject)
     book = models.ManyToManyField(Book)
+
+class Collection_Book(models.Model):
+    collection = models.ManyToManyField(Collection)
+    book = models.ManyToManyField(Book)
