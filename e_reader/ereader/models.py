@@ -14,3 +14,6 @@ class Author(models.Model):
     last_name = models.CharField(max_length=255)
     dob = models.DateField(blank=True)
     dod = models.DateField(blank=True)
+
+class Author_Role(models.Model):
+    role = models.CharField(max_length=255)
