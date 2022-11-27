@@ -17,3 +17,6 @@ class Author(models.Model):
 
 class Author_Role(models.Model):
     role = models.CharField(max_length=255)
+
+class Subject(models.Model):
+    subject = models.CharField(max_length=255)
