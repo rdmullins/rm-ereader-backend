@@ -20,3 +20,6 @@ class Author_Role(models.Model):
 
 class Subject(models.Model):
     subject = models.CharField(max_length=255)
+
+class Gutenberg_Type(models.Model):
+    type = models.CharField(max_length=255)
