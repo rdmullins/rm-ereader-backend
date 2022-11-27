@@ -46,3 +46,7 @@ class User_Book(models.Model):
 class Collection(models.Model):
     name = models.CharField(max_length=255)
     is_public = models.BooleanField(default=False)
+
+class User_Collection(models.Model):
+    collection = models.ManyToManyField(Collection)
+    user = models.ManyToManyField(CustomUser)
