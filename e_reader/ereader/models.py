@@ -23,3 +23,10 @@ class Subject(models.Model):
 
 class Gutenberg_Type(models.Model):
     type = models.CharField(max_length=255)
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    gut_id = models.IntegerField()
+    lib_id = models.IntegerField()
+    gut_issued = models.DateField(blank=True)
+    gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
