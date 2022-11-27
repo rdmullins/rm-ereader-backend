@@ -45,5 +45,9 @@ for row in reader:
         if len(individual) > 3:
             print("author_role = ", individual[3])
     # print ("author = ", author)
+    for x in range(3):
+        col = x + 6
+        if len(row[col]) > 0:
+            print("Subject = ", row[col])
 
 
