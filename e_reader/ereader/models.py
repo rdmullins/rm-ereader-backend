@@ -30,3 +30,6 @@ class Book(models.Model):
     lib_id = models.IntegerField()
     gut_issued = models.DateField(blank=True)
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
+
+class Book_Status(models.Model):
+    status = models.CharField(max_length=255)
