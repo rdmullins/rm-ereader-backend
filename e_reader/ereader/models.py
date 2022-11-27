@@ -50,3 +50,8 @@ class Collection(models.Model):
 class User_Collection(models.Model):
     collection = models.ManyToManyField(Collection)
     user = models.ManyToManyField(CustomUser)
+
+class Author_Book(models.Model):
+    author = models.ManyToManyField(Author)
+    book = models.ManyToManyField(Book)
+    author_role = models.ForeignKey(Author_Role, on_delete=models.PROTECT)
