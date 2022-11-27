@@ -55,3 +55,7 @@ class Author_Book(models.Model):
     author = models.ManyToManyField(Author)
     book = models.ManyToManyField(Book)
     author_role = models.ForeignKey(Author_Role, on_delete=models.PROTECT)
+
+class Subject_Book(models.Model):
+    subject = models.ManyToManyField(Subject)
+    book = models.ManyToManyField(Book)
