@@ -12,8 +12,8 @@ class CustomUser(AbstractUser):
 class Author(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    dob = models.DateField(blank=True)
-    dod = models.DateField(blank=True)
+    dob = models.CharField(max_length=4)
+    dod = models.CharField(max_length=4)
 
     def __str__(self):
         return '%s, %s (%s - %s)' % (self.last_name, self.first_name, self.dob, self.dod)
@@ -39,7 +39,7 @@ class Gutenberg_Type(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     gut_id = models.IntegerField()
-    lib_id = models.IntegerField()
+    lib_id = models.IntegerField(blank=True)
     gut_issued = models.DateField(blank=True)
     description = models.TextField(default="No Description Available")
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
@@ -63,7 +63,7 @@ class User_Book(models.Model):
     is_visible = models.BooleanField(default=True)
 
     def __str__(self):
-        return 'User: %s\nBook: %s' % (self.user.username, self.book.title)
+        return 'User: %s\nBook: %s' % (self.user, self.book)
 
 class Collection(models.Model):
     name = models.CharField(max_length=255)
@@ -77,7 +77,7 @@ class User_Collection(models.Model):
     user = models.ManyToManyField(CustomUser)
 
     def __str__(self):
-        return self.collection.name
+        return self.collection
 
 class Author_Book(models.Model):
     author = models.ManyToManyField(Author)
@@ -85,18 +85,18 @@ class Author_Book(models.Model):
     author_role = models.ForeignKey(Author_Role, on_delete=models.PROTECT)
 
     def __str__(self):
-        return ('%s, %s (%s)') % (self.author, self.book.title, self.author_role.role)
+        return ('%s, %s (%s)') % (self.author, self.book, self.author_role)
 
 class Subject_Book(models.Model):
     subject = models.ManyToManyField(Subject)
     book = models.ManyToManyField(Book)
 
     def __str__(self):
-        return ('%s, %s') % (self.subject.subject, self.book.title)
+        return ('%s, %s') % (self.subject, self.book)
 
 class Collection_Book(models.Model):
     collection = models.ManyToManyField(Collection)
     book = models.ManyToManyField(Book)
 
     def __str__(self):
-        return ('%s, %s') % (self.collection.name, self.book.title)
+        return ('%s, %s') % (self.collection, self.book)
