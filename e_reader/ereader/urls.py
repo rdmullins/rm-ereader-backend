@@ -12,4 +12,6 @@ urlpatterns = [
     path('', views.books),
     path('', include(router.urls)),
     path('booksearch/', views.BookSearch.as_view(), name="BookSearch"),
+    path('authorsearch/', views.AuthorSearch.as_view(), name="AuthorSearch"),
+    path('subjectsearch/', views.SubjectSearch.as_view(), name="SubjectSearch"),
 ]
