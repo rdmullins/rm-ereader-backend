@@ -27,3 +27,15 @@ class BookSearch(generics.ListAPIView):
     serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
+
+class AuthorSearch(generics.ListAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['last_name']
+
+class SubjectSearch(generics.ListAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['subject']
