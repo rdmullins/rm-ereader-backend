@@ -45,7 +45,7 @@ class Book(models.Model):
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
 
     def __str__(self):
-        return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s\nDescription:\n\%s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id, self.description)
+        return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id)
 
 class Book_Status(models.Model):
     status = models.CharField(max_length=255)
