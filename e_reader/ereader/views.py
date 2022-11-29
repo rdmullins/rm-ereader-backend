@@ -11,7 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 def books(request):
     return HttpResponse("This is the books endpoint.")
 
-def BookViewSet(ModelViewSet):
+class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     http_method_names = ["get", "post"]
