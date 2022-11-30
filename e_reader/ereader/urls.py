@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-# from .views import *
+from .views import *
 from rest_framework import routers
 
 router = routers.SimpleRouter()
@@ -14,4 +14,5 @@ urlpatterns = [
     path('booksearch/', views.BookSearch.as_view(), name="BookSearch"),
     path('authorsearch/', views.AuthorSearch.as_view(), name="AuthorSearch"),
     path('subjectsearch/', views.SubjectSearch.as_view(), name="SubjectSearch"),
+    path("author_book/<str:pk>/", Author_BookAPIView.as_view(), name="AuthorBookLookup"),
 ]
