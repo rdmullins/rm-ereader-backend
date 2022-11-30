@@ -35,3 +35,11 @@ class Author_BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author_Book
         fields = "__all__"
+
+class Subject_BookSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer(many=True)
+    book = BookSerializer(many=True)
+
+    class Meta:
+        model = Subject_Book
+        fields = "__all__"

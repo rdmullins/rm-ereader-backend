@@ -35,7 +35,27 @@ class AuthorSearch(generics.ListAPIView):
     search_fields = ['last_name']
 
 class SubjectSearch(generics.ListAPIView):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
+    queryset = Subject_Book.objects.all()
+    serializer_class = Subject_BookSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['subject']
+
+class Author_BookAPIView(APIView):
+
+# Read Functionality
+
+    def get_object(self, pk):
+        try:
+            return Author_Book.objects.get(pk=pk)
+        except Author_Book.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            data = self.get_object(pk)
+            serializer = Author_BookSerializer(data)
+        else:
+            data = Author_Book.objects.all()
+            serializer = Author_BookSerializer(data, many=True)
+
+        return Response(serializer.data)
