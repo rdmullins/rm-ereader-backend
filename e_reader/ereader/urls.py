@@ -15,4 +15,5 @@ urlpatterns = [
     path('authorsearch/', views.AuthorSearch.as_view(), name="AuthorSearch"),
     path('subjectsearch/', views.SubjectSearch.as_view(), name="SubjectSearch"),
     path("author_book/<str:pk>/", Author_BookAPIView.as_view(), name="AuthorBookLookup"),
+    path("bookmetadata/<str:gut_id>/", BookMetaDataView.as_view(), name="MetaDataLookup"),
 ]
