@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from .fields import *
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,13 +25,14 @@ class Gutenberg_TypeSerializer(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = "__all__"
+        fields = ("title", "gut_id", "lib_id", "gut_issued", "description", "gut_type")
     gut_type = Gutenberg_TypeSerializer()
 
 class Author_BookSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(many=True)
     book = BookSerializer(many=True)
     author_role = Author_RoleSerializer()
+    # subject = SubjectSerializer(many=True)
 
     class Meta:
         model = Author_Book
@@ -42,4 +44,16 @@ class Subject_BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject_Book
+        fields = "__all__"
+
+class Author_SearchSerializer(serializers.ModelSerializer):
+    # author = AuthorListingField(many=True, read_only=True)
+
+    class Meta:
+        model = Author_Book
+        fields = ('book_info',)
+
+class BookMetaDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookMetaData
         fields = "__all__"

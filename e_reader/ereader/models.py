@@ -93,8 +93,8 @@ class User_Collection(models.Model):
         return self.collection
 
 class Author_Book(models.Model):
-    author = models.ManyToManyField(Author)
-    book = models.ManyToManyField(Book)
+    author = models.ManyToManyField(Author, related_name="author_of_book")
+    book = models.ManyToManyField(Book, related_name="book_info")
     author_role = models.ForeignKey(Author_Role, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -113,3 +113,13 @@ class Collection_Book(models.Model):
 
     def __str__(self):
         return ('%s, %s') % (self.collection, self.book)
+
+class BookMetaData(models.Model):
+    fulltext = models.TextField()
+    epub = models.FileField(null=True)
+    cover = models.FileField(null=True)
+    gut_id = models.IntegerField(null=True)
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.book.title

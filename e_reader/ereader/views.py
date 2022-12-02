@@ -21,6 +21,8 @@ class Author_BookViewSet(ModelViewSet):
     queryset = Author_Book.objects.all()
     serializer_class = Author_BookSerializer
     http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['Book_title', 'Author_last_name', 'Subject_subject']
 
 class BookSearch(generics.ListAPIView):
     queryset = Book.objects.all()
@@ -29,16 +31,44 @@ class BookSearch(generics.ListAPIView):
     search_fields = ['title']
 
 class AuthorSearch(generics.ListAPIView):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
+    queryset = Author_Book.objects.all()
+    serializer_class = Author_BookSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['last_name']
+
+# class AuthorSearch(generics.ListAPIView):
+#     serializer_class_Author = AuthorSerializer
+#     serializer_class_Book = BookSerializer
+
+#     def get(self, request, *args, **kwargs):
+#         if request.method == 'GET':
+#             query1 = Author.objects.all()
+#             query2 = Book.objects.all()
+
+#             serializer1 = self.serializer_class_Author(query1)
+#             serializer2 = self.serializer_class_Book(query2)
+
+#             filter_backends = [filters.SearchFilter]
+#             search_fields = [Author.last_name]
+
+#             return Response(
+#                 {
+#                     'author':serializer1.data,
+#                     'book': serializer2.data,
+#                 }
+#             )
 
 class SubjectSearch(generics.ListAPIView):
     queryset = Subject_Book.objects.all()
     serializer_class = Subject_BookSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['subject']
+
+class BookMetaDataView(generics.ListAPIView):
+    queryset = BookMetaData.objects.all()
+    serializer_class = BookMetaDataSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['gut_id']
 
 class Author_BookAPIView(APIView):
 

@@ -12,6 +12,7 @@ from .models import User_Collection
 from .models import Author_Book
 from .models import Subject_Book
 from .models import Collection_Book
+from .models import BookMetaData
 
 # Register your models here.
 admin.site.register(CustomUser)
@@ -27,3 +28,6 @@ admin.site.register(User_Collection)
 admin.site.register(Author_Book)
 admin.site.register(Subject_Book)
 admin.site.register(Collection_Book)
+admin.site.register(BookMetaData)
+
+# search_fields = [Author.last_name, Subject.subject, Book.title, Author_Book.book]
