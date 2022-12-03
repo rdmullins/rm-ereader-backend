@@ -116,8 +116,7 @@ class Collection_Book(models.Model):
 
 class BookMetaData(models.Model):
     fulltext = models.TextField()
-    epub = models.FileField(null=True)
-    cover = models.FileField(null=True)
+
     gut_id = models.IntegerField(null=True)
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
 
