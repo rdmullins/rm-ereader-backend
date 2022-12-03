@@ -6,7 +6,7 @@ from .serializers import *
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, filters
-
+from rest_framework.decorators import action
 # Create your views here.
 
 def books(request):
@@ -23,6 +23,26 @@ class Author_BookViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
     filter_backends = [filters.SearchFilter]
     search_fields = ['Book_title', 'Author_last_name', 'Subject_subject']
+
+    @action(detail=True, methods=["GET"])
+    def getBooksByAuthor(self, request, **kwargs):
+        id = self.kwargs.get("pk")
+        books = Book.objects.filter(author__id=id)
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
+
+# class ArtistViewSet(ModelViewSet):
+#     queryset = Artist.objects.all()
+#     serializer_class = ArtistSerializer
+
+#     # returns songs from artist
+#     @action(detail=True, methods=['GET'])
+#     def getSongsByArtist(self, request, **kwargs):
+#         id = self.kwargs.get('pk')
+#         songs = Song.objects.filter(artist__id=id)
+#         serializer = SongSerializer(songs, many=True)
+#         return Response(serializer.data)
 
 class BookSearch(generics.ListAPIView):
     queryset = Book.objects.all()
@@ -69,6 +89,27 @@ class BookMetaDataView(generics.ListAPIView):
     serializer_class = BookMetaDataSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['gut_id']
+
+class BookMetaDataLookupAPIView(APIView):
+
+# Read Functionality
+
+    def get_object(self, gut_id):
+        try:
+            return BookMetaData.objects.get(gut_id=gut_id)
+        except BookMetaData.DoesNotExist:
+            raise Http404
+
+    def get(self, request, gut_id=None, format=None):
+        if gut_id:
+            data = self.get_object(gut_id)
+            serializer = BookMetaDataSerializer(data)
+        else:
+            data = BookMetaData.objects.all()
+            serializer = BookMetaDataSerializer(data, many=True)
+
+        return Response(serializer.data)
+
 
 class Author_BookAPIView(APIView):
 
