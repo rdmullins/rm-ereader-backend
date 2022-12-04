@@ -17,6 +17,13 @@ class BookViewSet(ModelViewSet):
     serializer_class = BookSerializer
     http_method_names = ["get", "post"]
 
+class Author_Book_DetailViewSet(ModelViewSet):
+    queryset = Author_Book.objects.all()
+    serializer_class = Author_Book_Detail_SearchSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['book', 'author']
+
 class Author_BookViewSet(ModelViewSet):
     queryset = Author_Book.objects.all()
     serializer_class = Author_BookSerializer
@@ -30,6 +37,13 @@ class Author_BookViewSet(ModelViewSet):
         books = Book.objects.filter(author__id=id)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
+
+class Book_DetailViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = Book_DetailSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "last_name", "subject"]
 
 
 # class ArtistViewSet(ModelViewSet):

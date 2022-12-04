@@ -6,6 +6,8 @@ from rest_framework import routers
 router = routers.SimpleRouter()
 router.register(r'books_api', views.BookViewSet)
 router.register(r"author_books", views.Author_BookViewSet)
+router.register(r"author_book_detail", views.Author_Book_DetailViewSet)
+router.register(r"book_detail", views.Book_DetailViewSet)
 #router.register(r"booksearch", views.BookSearch)
 
 urlpatterns = [
@@ -17,4 +19,5 @@ urlpatterns = [
     path("author_book/<str:pk>/", Author_BookAPIView.as_view(), name="AuthorBookLookup"),
     path("bookmetadata/<str:gut_id>/", BookMetaDataView.as_view(), name="MetaData"),
     path("bookmetadatalookup/<str:gut_id>/", BookMetaDataLookupAPIView.as_view(), name="MetaDataLookup"),
+    #path("author_book_detail", Author_Book_DetailViewSet.as_view(), name="AuthorBookDetail"),
 ]
