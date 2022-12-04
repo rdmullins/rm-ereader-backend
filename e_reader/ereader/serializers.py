@@ -29,14 +29,30 @@ class BookSerializer(serializers.ModelSerializer):
     gut_type = Gutenberg_TypeSerializer()
 
 class Author_BookSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer(many=True)
-    book = BookSerializer(many=True)
-    author_role = Author_RoleSerializer()
+    # author = AuthorSerializer(many=True)
+    # book = BookSerializer(many=True)
+    # author_role = Author_RoleSerializer()
     # subject = SubjectSerializer(many=True)
-
+    author = serializers.SerializerMethodField()
+    book = serializers.SerializerMethodField()
+    author_role = serializers.SerializerMethodField()
+    
     class Meta:
         model = Author_Book
         fields = "__all__"
+
+    def get_author(self, obj):
+        return obj.book.first().author.first_name
+
+    def get_book(self,obj):
+        book = obj.book.all()
+        author_book_view = []
+        for volume in book:
+            title = book.title
+            author_of_book = author
+            author_book_view.append(f'Book: {title}, Author: {author_of_book}')
+        return author_book_view
+
 
 class Subject_BookSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer(many=True)
