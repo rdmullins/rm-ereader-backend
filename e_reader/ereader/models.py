@@ -76,9 +76,9 @@ class Book(models.Model):
     gut_issued = models.DateField(blank=True)
     description = models.TextField(default="No Description Available")
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
-    subject = models.ManyToManyField("Subject_Book", blank=True, related_name="book_subject")
-    author = models.ManyToManyField("Author_Book", blank=True, related_name="book_author")
-    collection = models.ManyToManyField("Collection_Book", blank=True, related_name="book_collection")
+    # subject = models.ManyToManyField("Subject_Book", blank=True, related_name="book_subject")
+    # author = models.ManyToManyField("Author_Book", blank=True, related_name="book_author")
+    # collection = models.ManyToManyField("Collection_Book", blank=True, related_name="book_collection")
 
     def __str__(self):
         return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id)

@@ -12,6 +12,11 @@ class Author_RoleSerializer(serializers.ModelSerializer):
         model = Author_Role
         fields = "__all__"
 
+class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = "__all__"
+
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
@@ -61,6 +66,14 @@ class Subject_BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject_Book
+        fields = "__all__"
+
+class Collection_BookSerializer(serializers.ModelSerializer):
+    collection = CollectionSerializer(many=True)
+    book = BookSerializer(many=True)
+
+    class Meta:
+        model = Collection_Book
         fields = "__all__"
 
 class Author_SearchSerializer(serializers.ModelSerializer):
