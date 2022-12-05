@@ -71,6 +71,7 @@ class Subject_BookSerializer(serializers.ModelSerializer):
 class Collection_BookSerializer(serializers.ModelSerializer):
     collection = CollectionSerializer(many=True)
     book = BookSerializer(many=True)
+    depth = 4
 
     class Meta:
         model = Collection_Book

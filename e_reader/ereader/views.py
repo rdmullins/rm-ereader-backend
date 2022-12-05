@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, filters
 from rest_framework.decorators import action
+from drf_multiple_model.views import ObjectMultipleModelAPIView
 # Create your views here.
 
 def books(request):
@@ -160,9 +161,44 @@ class Author_BookAPIView(APIView):
 
         return Response(serializer.data)
 
+class Collection_BookAPIView(APIView):
+
+# Read Functionality
+
+    def get_object(self, pk):
+        try:
+            return Collection_Book.objects.get(pk=pk)
+        except Collection_Book.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            data = self.get_object(pk)
+            serializer = Collection_BookSerializer(data)
+        else:
+            data = Collection_Book.objects.all()
+            serializer = Collection_BookSerializer(data, many=True)
+
+        return Response(serializer.data)
+
 # def testing(request):
 #     collections = Collection_Book.objects.all().values()
 #     context = {
 #         "Collections": collections,
 #     }
 #     return HttpResponse(collections)
+
+# class testAPI(ObjectMultipleModelAPIView):
+#     querylist = [
+#         {'queryset': Collection.objects.all(), 'serializer_class': CollectionSerializer},
+#         {'queryset': }
+#     ]
+
+class testAPI(generics.ListAPIView):
+    book_for_collection = serializers.RelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Collection_Book
+        fields = ("name", "book", "book_for_collection")
+
+
