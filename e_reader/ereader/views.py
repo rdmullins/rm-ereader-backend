@@ -38,41 +38,21 @@ class Author_Book_DetailViewSet(ModelViewSet):
     serializer_class = Author_Book_Detail_SearchSerializer
     http_method_names = ["get", "post"]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['book', 'author']
+    search_fields = ['title', 'authors', 'subjects']
 
 class Author_BookViewSet(ModelViewSet):
     queryset = Author_Book.objects.all()
     serializer_class = Author_BookSerializer
     http_method_names = ["get", "post"]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['Book_title', 'Author_last_name', 'Subject_subject']
-
-    @action(detail=True, methods=["GET"])
-    def getBooksByAuthor(self, request, **kwargs):
-        id = self.kwargs.get("pk")
-        books = Book.objects.filter(author__id=id)
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
+    search_fields = ['title', 'authors', 'subjects']
 
 class Book_DetailViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = Book_DetailSerializer
     http_method_names = ["get", "post"]
     filter_backends = [filters.SearchFilter]
-    search_fields = ["title", "last_name", "subject"]
-
-
-# class ArtistViewSet(ModelViewSet):
-#     queryset = Artist.objects.all()
-#     serializer_class = ArtistSerializer
-
-#     # returns songs from artist
-#     @action(detail=True, methods=['GET'])
-#     def getSongsByArtist(self, request, **kwargs):
-#         id = self.kwargs.get('pk')
-#         songs = Song.objects.filter(artist__id=id)
-#         serializer = SongSerializer(songs, many=True)
-#         return Response(serializer.data)
+    search_fields = ["title", "authors", "subjects"]
 
 class BookSearch(generics.ListAPIView):
     queryset = Book.objects.all()
@@ -81,38 +61,28 @@ class BookSearch(generics.ListAPIView):
     search_fields = ['title']
 
 class AuthorSearch(generics.ListAPIView):
-    queryset = Author_Book.objects.all()
-    serializer_class = Author_BookSerializer
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['last_name']
-
-# class AuthorSearch(generics.ListAPIView):
-#     serializer_class_Author = AuthorSerializer
-#     serializer_class_Book = BookSerializer
-
-#     def get(self, request, *args, **kwargs):
-#         if request.method == 'GET':
-#             query1 = Author.objects.all()
-#             query2 = Book.objects.all()
-
-#             serializer1 = self.serializer_class_Author(query1)
-#             serializer2 = self.serializer_class_Book(query2)
-
-#             filter_backends = [filters.SearchFilter]
-#             search_fields = [Author.last_name]
-
-#             return Response(
-#                 {
-#                     'author':serializer1.data,
-#                     'book': serializer2.data,
-#                 }
-#             )
+    search_fields = ['authors__last_name']
 
 class SubjectSearch(generics.ListAPIView):
-    queryset = Subject_Book.objects.all()
-    serializer_class = Subject_BookSerializer
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['subject']
+    search_fields = ['subjects__subject']
+
+class CollectionSearch(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['collections__name']
+
+class BookById(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [pk]
 
 class BookMetaDataView(generics.ListAPIView):
     queryset = BookMetaData.objects.all()
@@ -180,25 +150,5 @@ class Collection_BookAPIView(APIView):
             serializer = Collection_BookSerializer(data, many=True)
 
         return Response(serializer.data)
-
-# def testing(request):
-#     collections = Collection_Book.objects.all().values()
-#     context = {
-#         "Collections": collections,
-#     }
-#     return HttpResponse(collections)
-
-# class testAPI(ObjectMultipleModelAPIView):
-#     querylist = [
-#         {'queryset': Collection.objects.all(), 'serializer_class': CollectionSerializer},
-#         {'queryset': }
-#     ]
-
-class testAPI(generics.ListAPIView):
-    book_for_collection = serializers.RelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = Collection_Book
-        fields = ("name", "book", "book_for_collection")
 
 

@@ -30,7 +30,8 @@ class Gutenberg_TypeSerializer(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ("title", "gut_id", "lib_id", "gut_issued", "description", "gut_type")
+        fields = "__all__"
+        depth = 2
     gut_type = Gutenberg_TypeSerializer()
 
 class Author_BookSerializer(serializers.ModelSerializer):

@@ -18,11 +18,12 @@ urlpatterns = [
     path('booksearch/', views.BookSearch.as_view(), name="BookSearch"),
     path('authorsearch/', views.AuthorSearch.as_view(), name="AuthorSearch"),
     path('subjectsearch/', views.SubjectSearch.as_view(), name="SubjectSearch"),
+    path('collectionsearch/', views.CollectionSearch.as_view(), name="CollectionSearch"),
     path("author_book/<str:pk>/", Author_BookAPIView.as_view(), name="AuthorBookLookup"),
     path("collection_book/<str:pk>/", Collection_BookAPIView.as_view(), name="CollectionBookLookup"),
     path("bookmetadata/<str:gut_id>/", BookMetaDataView.as_view(), name="MetaData"),
     path("bookmetadatalookup/<str:gut_id>/", BookMetaDataLookupAPIView.as_view(), name="MetaDataLookup"),
     #path("collection_api/", Collection_API_ReturnViewSet.as_view(), name="CollectionAPI"),
-    path("testing/", views.testAPI.as_view(), name="Testing"),
+    #path("testing/", views.testAPI.as_view(), name="Testing"),
     #path("author_book_detail", Author_Book_DetailViewSet.as_view(), name="AuthorBookDetail"),
 ]
