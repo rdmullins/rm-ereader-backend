@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'ereader',
+    'drf_multiple_model',
 ]
 
 MIDDLEWARE = [
