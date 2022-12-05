@@ -17,6 +17,28 @@ class BookViewSet(ModelViewSet):
     serializer_class = BookSerializer
     http_method_names = ["get", "post"]
 
+class Subject_API_ReturnViewSet(ModelViewSet):
+    queryset = Subject_Book.objects.all()
+    serializer_class = Subject_BookSerializer
+
+class Collection_API_ReturnViewSet(ModelViewSet):
+    queryset = Collection_Book.objects.all()
+    serializer_class = Collection_BookSerializer
+
+    # @action(detail=True, methods=["get"])
+    # def getBooksByCollection(self, request, **kwargs):
+    #     id = self.kwargs.get("pk")
+    #     books = Book.objects.filter(collection__id=id)
+    #     serializer = BookSerializer(books, many=True)
+    #     return Response(serializer.data)
+
+class Author_Book_DetailViewSet(ModelViewSet):
+    queryset = Author_Book.objects.all()
+    serializer_class = Author_Book_Detail_SearchSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['book', 'author']
+
 class Author_BookViewSet(ModelViewSet):
     queryset = Author_Book.objects.all()
     serializer_class = Author_BookSerializer
@@ -30,6 +52,13 @@ class Author_BookViewSet(ModelViewSet):
         books = Book.objects.filter(author__id=id)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
+
+class Book_DetailViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = Book_DetailSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "last_name", "subject"]
 
 
 # class ArtistViewSet(ModelViewSet):
@@ -130,3 +159,10 @@ class Author_BookAPIView(APIView):
             serializer = Author_BookSerializer(data, many=True)
 
         return Response(serializer.data)
+
+# def testing(request):
+#     collections = Collection_Book.objects.all().values()
+#     context = {
+#         "Collections": collections,
+#     }
+#     return HttpResponse(collections)
