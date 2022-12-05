@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, filters
 from rest_framework.decorators import action
+from drf_multiple_model.views import ObjectMultipleModelAPIView
 # Create your views here.
 
 def books(request):
@@ -16,6 +17,28 @@ class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     http_method_names = ["get", "post"]
+
+class Subject_API_ReturnViewSet(ModelViewSet):
+    queryset = Subject_Book.objects.all()
+    serializer_class = Subject_BookSerializer
+
+class Collection_API_ReturnViewSet(ModelViewSet):
+    queryset = Collection_Book.objects.all()
+    serializer_class = Collection_BookSerializer
+
+    # @action(detail=True, methods=["get"])
+    # def getBooksByCollection(self, request, **kwargs):
+    #     id = self.kwargs.get("pk")
+    #     books = Book.objects.filter(collection__id=id)
+    #     serializer = BookSerializer(books, many=True)
+    #     return Response(serializer.data)
+
+class Author_Book_DetailViewSet(ModelViewSet):
+    queryset = Author_Book.objects.all()
+    serializer_class = Author_Book_Detail_SearchSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['book', 'author']
 
 class Author_BookViewSet(ModelViewSet):
     queryset = Author_Book.objects.all()
@@ -30,6 +53,13 @@ class Author_BookViewSet(ModelViewSet):
         books = Book.objects.filter(author__id=id)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
+
+class Book_DetailViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = Book_DetailSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "last_name", "subject"]
 
 
 # class ArtistViewSet(ModelViewSet):
@@ -130,3 +160,45 @@ class Author_BookAPIView(APIView):
             serializer = Author_BookSerializer(data, many=True)
 
         return Response(serializer.data)
+
+class Collection_BookAPIView(APIView):
+
+# Read Functionality
+
+    def get_object(self, pk):
+        try:
+            return Collection_Book.objects.get(pk=pk)
+        except Collection_Book.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            data = self.get_object(pk)
+            serializer = Collection_BookSerializer(data)
+        else:
+            data = Collection_Book.objects.all()
+            serializer = Collection_BookSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+# def testing(request):
+#     collections = Collection_Book.objects.all().values()
+#     context = {
+#         "Collections": collections,
+#     }
+#     return HttpResponse(collections)
+
+# class testAPI(ObjectMultipleModelAPIView):
+#     querylist = [
+#         {'queryset': Collection.objects.all(), 'serializer_class': CollectionSerializer},
+#         {'queryset': }
+#     ]
+
+class testAPI(generics.ListAPIView):
+    book_for_collection = serializers.RelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Collection_Book
+        fields = ("name", "book", "book_for_collection")
+
+

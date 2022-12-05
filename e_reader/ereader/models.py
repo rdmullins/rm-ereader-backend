@@ -70,18 +70,6 @@ class Book_Status(models.Model):
     def __str__(self):
         self.status
 
-class User_Book(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
-    book = models.ForeignKey(Book, on_delete=models.PROTECT)
-    book_status = models.ForeignKey(Book_Status, on_delete=models.PROTECT)
-    farthest_read = models.IntegerField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    is_visible = models.BooleanField(default=True)
-
-    def __str__(self):
-        return 'User: %s\nBook: %s' % (self.user, self.book)
-
 class Collection(models.Model):
     name = models.CharField(max_length=255)
     is_public = models.BooleanField(default=False)
@@ -95,6 +83,20 @@ class User_Collection(models.Model):
 
     def __str__(self):
         return self.collection
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    gut_id = models.IntegerField()
+    lib_id = models.IntegerField(blank=True)
+    gut_issued = models.DateField(blank=True)
+    description = models.TextField(default="No Description Available")
+    gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
+    # subject = models.ManyToManyField("Subject_Book", blank=True, related_name="book_subject")
+    # author = models.ManyToManyField("Author_Book", blank=True, related_name="book_author")
+    # collection = models.ManyToManyField("Collection_Book", blank=True, related_name="book_collection")
+
+    def __str__(self):
+        return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id)
 
 class Author_Book(models.Model):
     author = models.ForeignKey(Author, default=0, on_delete=models.PROTECT)
@@ -118,6 +120,18 @@ class Collection_Book(models.Model):
     def __str__(self):
         return ('%s, %s') % (self.collection, self.book)
 
+class User_Book(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    book_status = models.ForeignKey(Book_Status, on_delete=models.PROTECT)
+    farthest_read = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    is_visible = models.BooleanField(default=True)
+
+    def __str__(self):
+        return 'User: %s\nBook: %s' % (self.user, self.book)
+
 class BookMetaData(models.Model):
     fulltext = models.TextField()
 
@@ -126,3 +140,4 @@ class BookMetaData(models.Model):
 
     def __str__(self):
         return self.book.title
+
