@@ -56,6 +56,10 @@ class Book(models.Model):
     gut_issued = models.DateField(blank=True)
     description = models.TextField(default="No Description Available")
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
+    collections = models.ManyToManyField("Collection", through="Collection_Book", related_name="books_by_collection")
+    authors = models.ManyToManyField("Author", through="Author_Book", related_name="books_by_author")
+    subjects = models.ManyToManyField("Subject", through="Subject_Book", related_name="books_by_subject")
+    #metadata = models.ForeignKey("BookMetaData", on_delete=models.PROTECT)
 
     def __str__(self):
         return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id)
@@ -93,23 +97,23 @@ class User_Collection(models.Model):
         return self.collection
 
 class Author_Book(models.Model):
-    author = models.ManyToManyField(Author, related_name="author_of_book")
-    book = models.ManyToManyField(Book, related_name="book_info")
-    author_role = models.ForeignKey(Author_Role, on_delete=models.PROTECT)
+    author = models.ForeignKey(Author, default=0, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, default=0, on_delete=models.PROTECT)
+    author_role = models.ForeignKey(Author_Role, default=0, on_delete=models.PROTECT)
 
     def __str__(self):
         return ('%s, %s (%s)') % (self.author, self.book, self.author_role)
 
 class Subject_Book(models.Model):
-    subject = models.ManyToManyField(Subject)
-    book = models.ManyToManyField(Book)
+    subject = models.ForeignKey(Subject, default=0, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, default=0, on_delete=models.PROTECT)
 
     def __str__(self):
         return ('%s, %s') % (self.subject, self.book)
 
 class Collection_Book(models.Model):
-    collection = models.ManyToManyField(Collection)
-    book = models.ManyToManyField(Book)
+    collection = models.ForeignKey(Collection, default=0, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, default=0, on_delete=models.PROTECT)
 
     def __str__(self):
         return ('%s, %s') % (self.collection, self.book)
