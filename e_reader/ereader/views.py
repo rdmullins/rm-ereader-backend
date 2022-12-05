@@ -82,7 +82,7 @@ class BookById(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [pk]
+    search_fields = ["id"]
 
 class BookMetaDataView(generics.ListAPIView):
     queryset = BookMetaData.objects.all()
