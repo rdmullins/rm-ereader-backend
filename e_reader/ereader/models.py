@@ -55,6 +55,7 @@ class Book(models.Model):
     lib_id = models.IntegerField(blank=True)
     gut_issued = models.DateField(blank=True)
     description = models.TextField(default="No Description Available")
+    cover_url = models.TextField(default="No Cover Available")
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
     collections = models.ManyToManyField("Collection", through="Collection_Book", related_name="books_by_collection")
     authors = models.ManyToManyField("Author", through="Author_Book", related_name="books_by_author")
