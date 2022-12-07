@@ -78,6 +78,16 @@ class CollectionSearch(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['collections__name']
 
+class Collections(generics.ListAPIView):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+
+# class CollectionBooks(generics.ListAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = []
+
 class BookById(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer

@@ -20,6 +20,7 @@ urlpatterns = [
     path('subjectsearch/', views.SubjectSearch.as_view(), name="SubjectSearch"),
     path('collectionsearch/', views.CollectionSearch.as_view(), name="CollectionSearch"),
     path('bookbyid/', views.BookById.as_view(), name="BookByID"),
+    path('collections/', views.Collections.as_view(), name="Collections"),
     path("author_book/<str:pk>/", Author_BookAPIView.as_view(), name="AuthorBookLookup"),
     path("collection_book/<str:pk>/", Collection_BookAPIView.as_view(), name="CollectionBookLookup"),
     path("bookmetadata/<str:gut_id>/", BookMetaDataView.as_view(), name="MetaData"),
