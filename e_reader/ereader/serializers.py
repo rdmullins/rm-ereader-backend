@@ -101,3 +101,21 @@ class Book_DetailSerializer(serializers.ModelSerializer):
         model = Book
         fields = "__all__"
         depth = 2
+
+class NarratorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Narrator
+        fields = "__all__"
+
+class AudioTracksSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AudioTracks
+        fields = "__all__"
+
+class AudioBookSerializer(serializers.ModelSerializer):
+    book = BookSerializer
+    narrator = NarratorSerializer
+    tracks = AudioTracksSerializer(many=True)
+    class Meta:
+        model = AudioBook
+        fields = "__all__"

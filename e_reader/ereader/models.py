@@ -142,3 +142,16 @@ class BookMetaData(models.Model):
     def __str__(self):
         return self.book.title
 
+class Narrator(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+
+class AudioTracks(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    track_url = models.CharField(max_length=255)
+
+class AudioBook(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    narrator = models.ForeignKey(Narrator, on_delete=models.PROTECT)
+    lib_link = models.CharField(max_length=255)
+    tracks = models.ManyToManyField(AudioTracks)

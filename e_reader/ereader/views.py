@@ -161,4 +161,25 @@ class Collection_BookAPIView(APIView):
 
         return Response(serializer.data)
 
+class AudioBookView(APIView):
+
+# Read Functionality
+
+    def get_object(self, gut_id):
+        try:
+            return AudioBook.objects.get(gut_id=book.gut_id)
+        except AudioBook.DoesNotExist:
+            raise Http404
+
+    def get(self, request, gut_id=None, format=None):
+        if gut_id:
+            data = self.get_object(book.gut_id)
+            serializer = AudioBookSerializer(data)
+        else:
+            data = AudioBook.objects.all()
+            serializer = AudioBookSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+
 

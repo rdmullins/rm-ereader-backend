@@ -13,6 +13,11 @@ from .models import Author_Book
 from .models import Subject_Book
 from .models import Collection_Book
 from .models import BookMetaData
+from .models import Narrator
+from .models import AudioTracks
+from .models import AudioBook
+
+
 
 # Register your models here.
 admin.site.register(CustomUser)
@@ -29,5 +34,9 @@ admin.site.register(Author_Book)
 admin.site.register(Subject_Book)
 admin.site.register(Collection_Book)
 admin.site.register(BookMetaData)
+admin.site.register(Narrator)
+admin.site.register(AudioTracks)
+admin.site.register(AudioBook)
+
 
 # search_fields = [Author.last_name, Subject.subject, Book.title, Author_Book.book]
