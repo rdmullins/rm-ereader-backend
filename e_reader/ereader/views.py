@@ -8,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, filters
 from rest_framework.decorators import action
 from drf_multiple_model.views import ObjectMultipleModelAPIView
+from django.db.models import Q
 # Create your views here.
 
 def books(request):
@@ -19,7 +20,7 @@ class BookViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
 
 class AudioBookViewSet(ModelViewSet):
-    queryset = AudioBook.objects.all()
+    queryset = AudioBook.objects.all().order_by("tracks")
     serializer_class = AudioBookSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['book__gut_id']
@@ -98,7 +99,7 @@ class BookById(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ["id"]
+    search_fields = ["gut_id"]
 
 class BookMetaDataView(generics.ListAPIView):
     queryset = BookMetaData.objects.all()
@@ -187,5 +188,18 @@ class AudioBookView(APIView):
 
         return Response(serializer.data)
 
+# class ReadingListSearchView(ModelViewSet):
+#     queryset = Book.objects.all()
+#     status = self.request.query_params.get("status", None)
+
+#     def get_queryset(self):
+#         if status is not None:
+#             status = status.split("|")
+#             query = Q()
+#             for x in status:
+#                 q = Q(status=x)
+#                 query |= q
+#             queryset = queryset.filter(query)
+#         return queryset
 
 
