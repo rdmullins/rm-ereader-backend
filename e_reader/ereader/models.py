@@ -150,8 +150,14 @@ class AudioTracks(models.Model):
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
     track_url = models.CharField(max_length=255)
 
+    def __str__(self):
+        return '%s - %s' % (self.book.title, self.track_url)
+
 class AudioBook(models.Model):
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
     narrator = models.ForeignKey(Narrator, on_delete=models.PROTECT)
     lib_link = models.CharField(max_length=255)
     tracks = models.ManyToManyField(AudioTracks)
+
+    def __str__(self):
+        return self.book.title

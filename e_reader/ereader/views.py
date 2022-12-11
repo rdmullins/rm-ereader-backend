@@ -18,6 +18,12 @@ class BookViewSet(ModelViewSet):
     serializer_class = BookSerializer
     http_method_names = ["get", "post"]
 
+class AudioBookViewSet(ModelViewSet):
+    queryset = AudioBook.objects.all()
+    serializer_class = AudioBookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['book__gut_id']
+
 class Subject_API_ReturnViewSet(ModelViewSet):
     queryset = Subject_Book.objects.all()
     serializer_class = Subject_BookSerializer
@@ -167,13 +173,13 @@ class AudioBookView(APIView):
 
     def get_object(self, gut_id):
         try:
-            return AudioBook.objects.get(gut_id=book.gut_id)
+            return AudioBook.objects.get(gut_id=book__gut_id)
         except AudioBook.DoesNotExist:
             raise Http404
 
     def get(self, request, gut_id=None, format=None):
         if gut_id:
-            data = self.get_object(book.gut_id)
+            data = self.get_object(book__gut_id)
             serializer = AudioBookSerializer(data)
         else:
             data = AudioBook.objects.all()

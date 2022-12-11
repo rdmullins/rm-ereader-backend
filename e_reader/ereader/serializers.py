@@ -119,3 +119,4 @@ class AudioBookSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioBook
         fields = "__all__"
+        depth = 2
