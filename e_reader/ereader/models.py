@@ -55,7 +55,12 @@ class Book(models.Model):
     lib_id = models.IntegerField(blank=True)
     gut_issued = models.DateField(blank=True)
     description = models.TextField(default="No Description Available")
+    cover_url = models.TextField(default="No Cover Available")
     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
+    collections = models.ManyToManyField("Collection", through="Collection_Book", related_name="books_by_collection")
+    authors = models.ManyToManyField("Author", through="Author_Book", related_name="books_by_author")
+    subjects = models.ManyToManyField("Subject", through="Subject_Book", related_name="books_by_subject")
+    #metadata = models.ForeignKey("BookMetaData", on_delete=models.PROTECT)
 
     def __str__(self):
         return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id)
@@ -65,18 +70,6 @@ class Book_Status(models.Model):
 
     def __str__(self):
         self.status
-
-class User_Book(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
-    book = models.ForeignKey(Book, on_delete=models.PROTECT)
-    book_status = models.ForeignKey(Book_Status, on_delete=models.PROTECT)
-    farthest_read = models.IntegerField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    is_visible = models.BooleanField(default=True)
-
-    def __str__(self):
-        return 'User: %s\nBook: %s' % (self.user, self.book)
 
 class Collection(models.Model):
     name = models.CharField(max_length=255)
@@ -92,34 +85,82 @@ class User_Collection(models.Model):
     def __str__(self):
         return self.collection
 
+# class Book(models.Model):
+#     title = models.CharField(max_length=255)
+#     gut_id = models.IntegerField()
+#     lib_id = models.IntegerField(blank=True)
+#     gut_issued = models.DateField(blank=True)
+#     description = models.TextField(default="No Description Available")
+#     gut_type = models.ForeignKey(Gutenberg_Type, on_delete=models.PROTECT)
+#     # subject = models.ManyToManyField("Subject_Book", blank=True, related_name="book_subject")
+#     # author = models.ManyToManyField("Author_Book", blank=True, related_name="book_author")
+#     # collection = models.ManyToManyField("Collection_Book", blank=True, related_name="book_collection")
+
+#     def __str__(self):
+#         return '%s (%s, %s)\n\tGutenberg ID: %s\n\tLibrivox ID: %s' %(self.title, self.gut_issued, self.gut_type, self.gut_id, self.lib_id)
+
 class Author_Book(models.Model):
-    author = models.ManyToManyField(Author, related_name="author_of_book")
-    book = models.ManyToManyField(Book, related_name="book_info")
-    author_role = models.ForeignKey(Author_Role, on_delete=models.PROTECT)
+    author = models.ForeignKey(Author, default=0, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, default=0, on_delete=models.PROTECT)
+    author_role = models.ForeignKey(Author_Role, default=0, on_delete=models.PROTECT)
 
     def __str__(self):
         return ('%s, %s (%s)') % (self.author, self.book, self.author_role)
 
 class Subject_Book(models.Model):
-    subject = models.ManyToManyField(Subject)
-    book = models.ManyToManyField(Book)
+    subject = models.ForeignKey(Subject, default=0, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, default=0, on_delete=models.PROTECT)
 
     def __str__(self):
         return ('%s, %s') % (self.subject, self.book)
 
 class Collection_Book(models.Model):
-    collection = models.ManyToManyField(Collection)
-    book = models.ManyToManyField(Book)
+    collection = models.ForeignKey(Collection, default=0, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, default=0, on_delete=models.PROTECT)
 
     def __str__(self):
         return ('%s, %s') % (self.collection, self.book)
 
+class User_Book(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    book_status = models.ForeignKey(Book_Status, on_delete=models.PROTECT)
+    farthest_read = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    is_visible = models.BooleanField(default=True)
+
+    def __str__(self):
+        return 'User: %s\nBook: %s' % (self.user, self.book)
+
 class BookMetaData(models.Model):
     fulltext = models.TextField()
-    epub = models.FileField(null=True)
-    cover = models.FileField(null=True)
+
     gut_id = models.IntegerField(null=True)
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.book.title
+
+class Narrator(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+
+    def __str__ (self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+class AudioTracks(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    track_url = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%s - %s' % (self.book.title, self.track_url)
+
+class AudioBook(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    narrator = models.ForeignKey(Narrator, on_delete=models.PROTECT)
+    lib_link = models.CharField(max_length=255)
+    tracks = models.ManyToManyField(AudioTracks)
 
     def __str__(self):
         return self.book.title

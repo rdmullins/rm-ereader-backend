@@ -6,7 +6,9 @@ from .serializers import *
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics, filters
-
+from rest_framework.decorators import action
+from drf_multiple_model.views import ObjectMultipleModelAPIView
+from django.db.models import Q
 # Create your views here.
 
 def books(request):
@@ -17,12 +19,47 @@ class BookViewSet(ModelViewSet):
     serializer_class = BookSerializer
     http_method_names = ["get", "post"]
 
+class AudioBookViewSet(ModelViewSet):
+    queryset = AudioBook.objects.all().order_by("tracks")
+    serializer_class = AudioBookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['book__gut_id']
+
+class Subject_API_ReturnViewSet(ModelViewSet):
+    queryset = Subject_Book.objects.all()
+    serializer_class = Subject_BookSerializer
+
+class Collection_API_ReturnViewSet(ModelViewSet):
+    queryset = Collection_Book.objects.all()
+    serializer_class = Collection_BookSerializer
+
+    # @action(detail=True, methods=["get"])
+    # def getBooksByCollection(self, request, **kwargs):
+    #     id = self.kwargs.get("pk")
+    #     books = Book.objects.filter(collection__id=id)
+    #     serializer = BookSerializer(books, many=True)
+    #     return Response(serializer.data)
+
+class Author_Book_DetailViewSet(ModelViewSet):
+    queryset = Author_Book.objects.all()
+    serializer_class = Author_Book_Detail_SearchSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'authors', 'subjects']
+
 class Author_BookViewSet(ModelViewSet):
     queryset = Author_Book.objects.all()
     serializer_class = Author_BookSerializer
     http_method_names = ["get", "post"]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['Book_title', 'Author_last_name', 'Subject_subject']
+    search_fields = ['title', 'authors', 'subjects']
+
+class Book_DetailViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = Book_DetailSerializer
+    http_method_names = ["get", "post"]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "authors", "subjects"]
 
 class BookSearch(generics.ListAPIView):
     queryset = Book.objects.all()
@@ -31,44 +68,65 @@ class BookSearch(generics.ListAPIView):
     search_fields = ['title']
 
 class AuthorSearch(generics.ListAPIView):
-    queryset = Author_Book.objects.all()
-    serializer_class = Author_BookSerializer
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['last_name']
-
-# class AuthorSearch(generics.ListAPIView):
-#     serializer_class_Author = AuthorSerializer
-#     serializer_class_Book = BookSerializer
-
-#     def get(self, request, *args, **kwargs):
-#         if request.method == 'GET':
-#             query1 = Author.objects.all()
-#             query2 = Book.objects.all()
-
-#             serializer1 = self.serializer_class_Author(query1)
-#             serializer2 = self.serializer_class_Book(query2)
-
-#             filter_backends = [filters.SearchFilter]
-#             search_fields = [Author.last_name]
-
-#             return Response(
-#                 {
-#                     'author':serializer1.data,
-#                     'book': serializer2.data,
-#                 }
-#             )
+    search_fields = ['authors__last_name']
 
 class SubjectSearch(generics.ListAPIView):
-    queryset = Subject_Book.objects.all()
-    serializer_class = Subject_BookSerializer
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['subject']
+    search_fields = ['subjects__subject']
+
+class CollectionSearch(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['collections__name']
+
+class Collections(generics.ListAPIView):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+
+# class CollectionBooks(generics.ListAPIView):
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = []
+
+class BookById(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["gut_id"]
 
 class BookMetaDataView(generics.ListAPIView):
     queryset = BookMetaData.objects.all()
     serializer_class = BookMetaDataSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['gut_id']
+
+class BookMetaDataLookupAPIView(APIView):
+
+# Read Functionality
+
+    def get_object(self, gut_id):
+        try:
+            return BookMetaData.objects.get(gut_id=gut_id)
+        except BookMetaData.DoesNotExist:
+            raise Http404
+
+    def get(self, request, gut_id=None, format=None):
+        if gut_id:
+            data = self.get_object(gut_id)
+            serializer = BookMetaDataSerializer(data)
+        else:
+            data = BookMetaData.objects.all()
+            serializer = BookMetaDataSerializer(data, many=True)
+
+        return Response(serializer.data)
+
 
 class Author_BookAPIView(APIView):
 
@@ -89,3 +147,59 @@ class Author_BookAPIView(APIView):
             serializer = Author_BookSerializer(data, many=True)
 
         return Response(serializer.data)
+
+class Collection_BookAPIView(APIView):
+
+# Read Functionality
+
+    def get_object(self, pk):
+        try:
+            return Collection_Book.objects.get(pk=pk)
+        except Collection_Book.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+        if pk:
+            data = self.get_object(pk)
+            serializer = Collection_BookSerializer(data)
+        else:
+            data = Collection_Book.objects.all()
+            serializer = Collection_BookSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+class AudioBookView(APIView):
+
+# Read Functionality
+
+    def get_object(self, gut_id):
+        try:
+            return AudioBook.objects.get(gut_id=book__gut_id)
+        except AudioBook.DoesNotExist:
+            raise Http404
+
+    def get(self, request, gut_id=None, format=None):
+        if gut_id:
+            data = self.get_object(book__gut_id)
+            serializer = AudioBookSerializer(data)
+        else:
+            data = AudioBook.objects.all()
+            serializer = AudioBookSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+# class ReadingListSearchView(ModelViewSet):
+#     queryset = Book.objects.all()
+#     status = self.request.query_params.get("status", None)
+
+#     def get_queryset(self):
+#         if status is not None:
+#             status = status.split("|")
+#             query = Q()
+#             for x in status:
+#                 q = Q(status=x)
+#                 query |= q
+#             queryset = queryset.filter(query)
+#         return queryset
+
+

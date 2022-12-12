@@ -1,0 +1,1 @@
+[{"model": "ereader.author_role", "pk": 1, "fields": {"role": "Illustrator"}}, {"model": "ereader.author_role", "pk": 2, "fields": {"role": "Editor"}}, {"model": "ereader.author_role", "pk": 3, "fields": {"role": "Translator"}}, {"model": "ereader.author_role", "pk": 4, "fields": {"role": "Author"}}]
