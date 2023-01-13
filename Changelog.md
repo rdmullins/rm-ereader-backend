@@ -6,3 +6,4 @@
 1/7/23 - Rearranging
 1/10/23 - Cross team meetings all day
 1/11/23 - Began work on next batch release
+1/12/23 - Wall to wall meetings @ work
