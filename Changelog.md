@@ -8,3 +8,4 @@
 1/11/23 - Began work on next batch release
 1/12/23 - Wall to wall meetings @ work
 1/15/23 - Meetings
+1/21/23 - Pondering switch to gitlab
